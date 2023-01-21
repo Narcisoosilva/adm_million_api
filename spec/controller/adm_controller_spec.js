@@ -5,9 +5,8 @@ const host = "http://localhost:3000";
 
 describe("AmdController", () =>{
   beforeEach(async() =>{
-    Adm.deleteMany({email: /torneseumprogramador/}).then(error =>{}); 
-    await Adm.create([{nome: "Danilo1", senha:'123456', email: 'danilo1@torneseumprogramador.com.br'}, 
-                      {nome: "Danilo2", senha:'123456', email: 'danilo2@torneseumprogramador.com.br'}]);    
+    await Adm.deleteMany({email: /torneseumprogramador/}).then(error =>{}); 
+    await Adm.create([{nome: "Danilo1", senha:'123456', email: 'danilo1@torneseumprogramador.com.br'}, {nome: "Danilo2", senha:'123456', email: 'danilo2@torneseumprogramador.com.br'}]);
   });
 
 
@@ -35,44 +34,35 @@ describe("AmdController", () =>{
         senha: '123456',
         email: nome + '@torneseumprogramador.com.br' 
       }
-      const rsponse = await axios.post(`${host}/adm.json`);
+      const rsponse = await axios.post(`${host}/adm.json`, body);
+      expect(response.status).toBe(201);
+      done();
     });
+  });
 
-    it("deve retornar dados da API", async(done) => {
-      const response = axios.get(`${host}/adm.json`).then(response =>{
-        itens = JSON.parse(response.body);
-        expect(itens[0].nome).toBe("Danilo1");
-        expect(itens[1].nome).toBe("Danilo2");
-      })
-      .catch(function (err){
-        throw err.message
-      });          
+  describe("PUT /adm.jon - administrador", () =>{
+    it("deve alterar um administrador", async(done) => {
+      let nome =`teste ${new Date().getTime()}`;
+      const adm = await Adm.create({nome: nome, senha:'123456', email: nome + '@torneseumprogramador.com.br'});
+      const body = { 
+        nome,
+        senha: '123456',
+        email: nome + '@torneseumprogramador.com.br' 
+      }
+      const response = await axios.put(`${host}/adm/${adm_id}.json`, body);
+        expect(response.status).toBe(204);
         done();
     });
   });
-/*
-  describe("PUT /adm.jon - administrador", () =>{
-    it("deve alterar um administrador", (done) => {
-      let nome =`teste ${new Date().getTime()}`;
-      new Adm({nome: nome, senha:'123456', email: nome + '@torneseumprogramador.com.br'});
-
-      let options = {
-        method: 'PUT',
-        uri:`${host}/adm${adm._id}.json`,
-        body:{
-          nome: nome, 
-          senha:'123456', 
-          email: nome + '@torneseumprogramador.com.br'
-        },
-        JSON: true
-      };
-      request(options).then(response =>{
-        expect(response.statusCode).toBe(200);
-      })
-      .catch(function (err){
-        throw err.message
-      });          
-        done();
-    });
-  });*/
+  
+  describe("DELETE /adm.json - administrador", () =>{
+   it("deve apagar um administrador", async(done) => {
+    let nome = `teste ${new Date().getTime()}`;
+    const adm = await Adm.create({nome: nome, senha: 122345667, email: nome + '@torneseumprogramador.com.br' });
+    const response = await axios.delete(`${host}/adm/${adm_id}.json`);
+    expect(response.status).toBe(204);
+    done();
+   });
+  });
+  
 });

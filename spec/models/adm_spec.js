@@ -6,7 +6,7 @@ beforeEach(function () {
 
 describe('Modelo Adm', () =>{
   it('Deve retornar o modelo de Adm', () =>{
-    Adm.find().then(dado =>{
+    Adm.find().then(dado => {
       expect(dado != undefined).toBe(true);
     });    
   });
@@ -41,18 +41,23 @@ describe('Modelo Adm', () =>{
   it('Não deve alterar um registro', () =>{
     let nome =`teste ${new Date().getTime()}`;
     const adm = new Adm({nome: nome, senha:'123456', email: nome + '@torneseumprogramador.com.br'});
+    
     adm.save(error =>{
       adm.nome = "Danilo";
+      
       adm.save(error =>{
         let novoNome = "Danilo" + new Date().getTime()
         adm.nome = novoNome;
         expect(error == undefined || error == null).toBe(true);
+        
         Adm.find({nome: novoNome}).then(dado =>{
           expect(dado.length > 0).toBe(true);
         });
-
+        
       });
+
     });
+
   });
   
 });
