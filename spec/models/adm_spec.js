@@ -1,7 +1,7 @@
 const Adm = require('../../app/models/adm');
 
 beforeEach(function () {
- Adm.deleteMany({email: /torneseumprogramador/}).then(error =>{}); 
+ Adm.deleteMany({email: /@/}).then(error =>{}); 
 });
 
 describe('Modelo Adm', () =>{
